@@ -1,36 +1,65 @@
 @extends('layouts.fe_layout')
 
+@section('title', 'Entrar')
+
+@section('main-class', 'auth-main')
+
 @section('content')
-<div class="container mt-5">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <div class="card shadow-sm border-0">
-                <div class="card-body p-4">
-                    <div class="text-center mb-4">
-                        <img src="{{ asset('images/user.png') }}" width="70" onerror="this.src='https://ui-avatars.com/api/?name=Cine&background=0D6EFD&color=fff'">
-                        <h4 class="fw-bold mt-2">Login CineCRM</h4>
+            <div class="auth-card">
+
+                <div class="auth-header">
+                    <i class="bi bi-camera-reels auth-icon"></i>
+                    <h4 class="auth-title">CineCRM</h4>
+                    <p class="auth-sub">Inicia sessão para continuar</p>
+                </div>
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email"
+                                name="email"
+                                id="email"
+                                class="form-control @error('email') is-invalid @enderror"
+                                value="{{ old('email') }}"
+                                placeholder="o.teu@email.com"
+                                required
+                                autofocus>
+                        @error('email')
+                            <div class="invalid-feedback">Credenciais inválidas.</div>
+                        @enderror
                     </div>
 
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" required autofocus>
-                            @error('email') <span class="invalid-feedback">Credenciais inválidas.</span> @enderror
-                        </div>
+                    <div class="mb-2">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password"
+                                name="password"
+                                id="password"
+                                class="form-control"
+                                placeholder="••••••••"
+                                required>
+                    </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
+                    <div class="mb-4 text-end">
+                        <a href="{{ route('password.request') }}" class="auth-link-small">
+                            Esqueceu-se da password?
+                        </a>
+                    </div>
 
-                        <div class="mb-3">
-                            <a href="{{ route('password.request') }}" class="small text-decoration-none">Esqueceu-se da senha?</a>
-                        </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
+                    </button>
 
-                        <button type="submit" class="btn btn-primary w-100 fw-bold">Entrar</button>
-                    </form>
-                </div>
+                    <div class="auth-footer-link">
+                        Não tem conta?
+                        <a href="{{ route('register') }}" class="auth-link">Registar</a>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>

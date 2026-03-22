@@ -27,10 +27,10 @@
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text"
-                           name="search"
-                           class="form-control border-start-0 ps-0"
-                           placeholder="Pesquisar por nome do filme..."
-                           value="{{ request('search') }}">
+                            name="search"
+                            class="form-control border-start-0 ps-0"
+                            placeholder="Pesquisar por nome do filme..."
+                            value="{{ request('search') }}">
                 </div>
             </div>
 
@@ -81,10 +81,10 @@
                         <img src="{{ $filme->capa
                                 ? (str_starts_with($filme->capa, 'http') ? $filme->capa : asset('storage/' . $filme->capa))
                                 : 'https://placehold.co/80x110/1a1e2a/8b92a5?text=?' }}"
-                             alt="Capa {{ $filme->titulo }}"
-                             class="table-logo"
-                             style="width:38px;height:54px;object-fit:cover;"
-                             onerror="this.src='https://placehold.co/80x110/1a1e2a/8b92a5?text=?'">
+                                alt="Capa {{ $filme->titulo }}"
+                                class="table-logo"
+                                style="width:38px;height:54px;object-fit:cover;"
+                                onerror="this.src='https://placehold.co/80x110/1a1e2a/8b92a5?text=?'">
                     </td>
                     <td>
                         <span class="fw-semibold d-block">{{ $filme->titulo }}</span>
@@ -95,14 +95,14 @@
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('admin.filmes.edit', $filme->id) }}"
-                               class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                                class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
                                 <i class="bi bi-pencil"></i>
                                 <span class="d-none d-xl-inline">Editar</span>
                             </a>
                             <form action="{{ route('admin.filmes.destroy', $filme->id) }}"
-                                  method="POST"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Apagar {{ addslashes($filme->titulo) }}?')">
+                                    method="POST"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Apagar {{ addslashes($filme->titulo) }}?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
@@ -128,14 +128,6 @@
         </table>
     </div>
 
-    @if(method_exists($filmes, 'links') && $filmes->lastPage() > 1)
-        <div class="card-footer d-flex justify-content-between align-items-center py-3 px-4">
-            <span class="text-muted small">
-                A mostrar {{ $filmes->firstItem() }}–{{ $filmes->lastItem() }} de {{ $filmes->total() }}
-            </span>
-            {{ $filmes->withQueryString()->links() }}
-        </div>
-    @endif
 </div>
 
 @endsection

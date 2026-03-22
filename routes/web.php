@@ -6,17 +6,13 @@ use App\Http\Controllers\FilmeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| ROTAS PROTEGIDAS (Apenas pedem Login)
-|--------------------------------------------------------------------------
-*/
+
 Route::middleware(['auth'])->group(function () {
 
-    // 1. Dashboard
+    // Dashboard
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-    // 2. Gestão de Estúdios
+    // Gestão de Estúdios
     Route::prefix('admin/estudios')->group(function () {
         Route::get('/', [EstudioController::class, 'adminList'])->name('admin.estudios.list');
         Route::get('/novo', [EstudioController::class, 'create'])->name('admin.estudios.create');
@@ -26,7 +22,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [EstudioController::class, 'destroy'])->name('admin.estudios.destroy');
     });
 
-    // 3. Gestão de Filmes
+    // Gestão de Filmes
     Route::prefix('admin/filmes')->group(function () {
         Route::get('/', [FilmeController::class, 'adminList'])->name('admin.filmes.list');
         Route::get('/novo', [FilmeController::class, 'create'])->name('admin.filmes.create');
@@ -36,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [FilmeController::class, 'destroy'])->name('admin.filmes.destroy');
     });
 
-    // 4. Gestão de Utilizadores
+    // Gestão de Utilizadores
     Route::prefix('admin/users')->group(function () {
         Route::get('/', [UserController::class, 'adminList'])->name('admin.users.list');
         Route::get('/novo', [UserController::class, 'create'])->name('admin.users.create');
@@ -46,17 +42,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
     });
 
-    // Rotas do Perfil do Utilizador (Qualquer pessoa logada)
+    // Rotas do Perfil do Utilizador
     Route::get('/perfil', [App\Http\Controllers\UserController::class, 'perfil'])->name('perfil.show');
     Route::post('/perfil/atualizar', [App\Http\Controllers\UserController::class, 'atualizarPerfil'])->name('perfil.update');
 
 });
 
-/*
-|--------------------------------------------------------------------------
-| ROTAS PÚBLICAS
-|--------------------------------------------------------------------------
-*/
 Route::get('/', [EstudioController::class, 'home'])->name('homepage');
 
 Route::get('/estudios', [EstudioController::class, 'list'])->name('estudios.list');

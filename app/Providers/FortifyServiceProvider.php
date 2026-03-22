@@ -45,23 +45,23 @@ class FortifyServiceProvider extends ServiceProvider
             return Limit::perMinute(5)->by($request->session()->get('login.id'));
         });
 
-        // View de Login
+    
     Fortify::loginView(function () {
         return view('auth.login');
     });
 
-    // View de "Esqueci-me da senha"
+
     Fortify::requestPasswordResetLinkView(function () {
         return view('auth.forgot-password');
     });
 
-    // View de "Resetar Senha" (o link que vem no email)
+
     Fortify::resetPasswordView(function ($request) {
         return view('auth.reset-password', ['request' => $request]);
     });
 
     Fortify::registerView(function () {
-        return view('auth.register'); // O nome do ficheiro blade que vamos criar
+        return view('auth.register');
     });
     }
 }

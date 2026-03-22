@@ -16,7 +16,6 @@
     </a>
 </div>
 
-{{-- Filtros --}}
 <div class="card mb-4">
     <div class="card-body py-3">
         <form action="{{ route('admin.users.list') }}" method="GET" class="row g-2 align-items-center">
@@ -27,10 +26,10 @@
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text"
-                           name="search"
-                           class="form-control border-start-0 ps-0"
-                           placeholder="Pesquisar por nome ou email..."
-                           value="{{ request('search') }}">
+                            name="search"
+                            class="form-control border-start-0 ps-0"
+                            placeholder="Pesquisar por nome ou email..."
+                            value="{{ request('search') }}">
                 </div>
             </div>
 
@@ -77,10 +76,10 @@
                         <img src="{{ $user->photo
                                 ? asset('storage/' . $user->photo)
                                 : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=2e3444&color=8b92a5&size=80' }}"
-                             alt="{{ $user->name }}"
-                             class="rounded-circle"
-                             style="width:38px;height:38px;object-fit:cover;border:2px solid var(--admin-border);"
-                             onerror="this.src='https://ui-avatars.com/api/?name=User&background=2e3444&color=8b92a5&size=80'">
+                                alt="{{ $user->name }}"
+                                class="rounded-circle"
+                                style="width:38px;height:38px;object-fit:cover;border:2px solid var(--admin-border);"
+                                onerror="this.src='https://ui-avatars.com/api/?name=User&background=2e3444&color=8b92a5&size=80'">
                     </td>
                     <td class="fw-semibold">{{ $user->name }}</td>
                     <td class="text-muted small">{{ $user->email }}</td>
@@ -98,14 +97,14 @@
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('admin.users.edit', $user->id) }}"
-                               class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                                class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
                                 <i class="bi bi-pencil"></i>
                                 <span class="d-none d-xl-inline">Editar</span>
                             </a>
                             <form action="{{ route('admin.users.destroy', $user->id) }}"
-                                  method="POST"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Apagar {{ addslashes($user->name) }}?')">
+                                    method="POST"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Apagar {{ addslashes($user->name) }}?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
@@ -131,14 +130,6 @@
         </table>
     </div>
 
-    @if(method_exists($users, 'links') && $users->lastPage() > 1)
-        <div class="card-footer d-flex justify-content-between align-items-center py-3 px-4">
-            <span class="text-muted small">
-                A mostrar {{ $users->firstItem() }}–{{ $users->lastItem() }} de {{ $users->total() }}
-            </span>
-            {{ $users->withQueryString()->links() }}
-        </div>
-    @endif
 </div>
 
 @endsection

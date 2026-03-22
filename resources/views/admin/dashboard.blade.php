@@ -4,7 +4,6 @@
 
 @section('content')
 
-{{-- ─── Cabeçalho ──────────────────────────────────────────────── --}}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="fw-bold mb-0">Visão Geral</h2>
@@ -18,7 +17,6 @@
     </span>
 </div>
 
-{{-- ─── Stat Cards ─────────────────────────────────────────────── --}}
 <div class="row g-3 mb-4">
 
     <div class="col-md-4">
@@ -68,7 +66,6 @@
 
 </div>
 
-{{-- ─── Ações Rápidas ───────────────────────────────────────────── --}}
 <p class="section-label">Ações Rápidas</p>
 
 <div class="row g-3">

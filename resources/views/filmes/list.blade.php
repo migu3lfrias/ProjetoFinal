@@ -5,7 +5,6 @@
 @section('content')
 <div class="container py-4">
 
-    {{-- Cabeçalho --}}
     <div class="page-header">
         <h1>Todos os Filmes</h1>
         <a href="{{ route('homepage') }}" class="btn btn-outline-secondary">
@@ -13,7 +12,6 @@
         </a>
     </div>
 
-    {{-- Filtros --}}
     <div class="filter-bar">
         <form action="{{ url()->current() }}" method="GET" class="row g-2 align-items-center">
 
@@ -23,10 +21,10 @@
                         <i class="bi bi-search text-muted"></i>
                     </span>
                     <input type="text"
-                           name="search"
-                           class="form-control border-start-0 ps-0"
-                           placeholder="Pesquisar por nome..."
-                           value="{{ request('search') }}">
+                            name="search"
+                            class="form-control border-start-0 ps-0"
+                            placeholder="Pesquisar por nome..."
+                            value="{{ request('search') }}">
                 </div>
             </div>
 
@@ -54,16 +52,15 @@
         </form>
     </div>
 
-    {{-- Grelha de filmes --}}
     <div class="row g-4">
         @forelse($filmes as $filme)
             <div class="col-6 col-md-3">
                 <div class="card film-card h-100">
                     <div class="film-poster-wrap">
                         <img src="{{ $filme->capa }}"
-                             onerror="this.onerror=null;this.src='https://placehold.co/400x600/292b2c/FFFFFF?text={{ urlencode($filme->titulo) }}';"
-                             class="card-img-top"
-                             alt="Capa de {{ $filme->titulo }}">
+                                onerror="this.onerror=null;this.src='https://placehold.co/400x600/292b2c/FFFFFF?text={{ urlencode($filme->titulo) }}';"
+                                class="card-img-top"
+                                alt="Capa de {{ $filme->titulo }}">
                         <div class="card-img-overlay">
                             <div class="overlay-content">
                                 <a href="{{ route('filmes.show', $filme->id) }}" class="btn btn-light btn-sm px-3">
@@ -101,13 +98,6 @@
             </div>
         @endforelse
     </div>
-
-    {{-- Paginação --}}
-    @if(isset($filmes) && method_exists($filmes, 'links') && $filmes->lastPage() > 1)
-        <div class="d-flex justify-content-center mt-5">
-            {{ $filmes->withQueryString()->links() }}
-        </div>
-    @endif
 
 </div>
 @endsection

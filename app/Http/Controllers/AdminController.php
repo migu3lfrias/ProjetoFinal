@@ -16,7 +16,6 @@ class AdminController extends Controller
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
 
-        // Se passar no if, carrega os dados normalmente
         $totalEstudios = Estudio::count();
         $totalFilmes = Filme::count();
         $totalUsers = User::count();

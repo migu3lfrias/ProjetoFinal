@@ -1,7 +1,5 @@
 @extends('layouts.admin')
 
-@section('title', 'Gerir Estúdios')
-
 @section('content')
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,7 +14,7 @@
     </a>
 </div>
 
-{{-- Filtros --}}
+
 <div class="card mb-4">
     <div class="card-body py-3">
         <form action="{{ url()->current() }}" method="GET" class="row g-2 align-items-center">
@@ -27,19 +25,11 @@
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text"
-                           name="search"
-                           class="form-control border-start-0 ps-0"
-                           placeholder="Pesquisar estúdio..."
-                           value="{{ request('search') }}">
+                        name="search"
+                        class="form-control border-start-0 ps-0"
+                        placeholder="Pesquisar estúdio..."
+                        value="{{ request('search') }}">
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <select name="ordem" class="form-select">
-                    <option value="">Ordenação padrão</option>
-                    <option value="az" {{ request('ordem') == 'az' ? 'selected' : '' }}>Alfabética (A → Z)</option>
-                    <option value="za" {{ request('ordem') == 'za' ? 'selected' : '' }}>Inversa (Z → A)</option>
-                </select>
             </div>
 
             <div class="col-md-3 d-flex gap-2">
@@ -77,22 +67,22 @@
                         <img src="{{ $estudio->logo
                                 ? (str_starts_with($estudio->logo, 'http') ? $estudio->logo : asset('storage/' . $estudio->logo))
                                 : 'https://ui-avatars.com/api/?name=' . urlencode($estudio->name) . '&background=2e3444&color=8b92a5&size=80' }}"
-                             alt="Logo {{ $estudio->name }}"
-                             class="table-logo"
-                             onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=2e3444&color=8b92a5&size=80'">
+                                alt="Logo {{ $estudio->name }}"
+                                class="table-logo"
+                                onerror="this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=2e3444&color=8b92a5&size=80'">
                     </td>
                     <td class="fw-semibold">{{ $estudio->name }}</td>
                     <td class="text-end pe-4">
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('admin.estudios.edit', $estudio->id) }}"
-                               class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
+                                class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1">
                                 <i class="bi bi-pencil"></i>
                                 <span class="d-none d-xl-inline">Editar</span>
                             </a>
                             <form action="{{ route('admin.estudios.destroy', $estudio->id) }}"
-                                  method="POST"
-                                  class="d-inline"
-                                  onsubmit="return confirm('Apagar {{ addslashes($estudio->name) }}? Os filmes associados podem ficar órfãos.')">
+                                method="POST"
+                                class="d-inline"
+                                onsubmit="return confirm('Apagar {{ addslashes($estudio->name) }}? Os filmes associados podem ficar órfãos.')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
@@ -117,15 +107,6 @@
             </tbody>
         </table>
     </div>
-
-    @if(method_exists($estudios, 'links') && $estudios->lastPage() > 1)
-        <div class="card-footer d-flex justify-content-between align-items-center py-3 px-4">
-            <span class="text-muted small">
-                A mostrar {{ $estudios->firstItem() }}–{{ $estudios->lastItem() }} de {{ $estudios->total() }}
-            </span>
-            {{ $estudios->withQueryString()->links() }}
-        </div>
-    @endif
 </div>
 
 @endsection

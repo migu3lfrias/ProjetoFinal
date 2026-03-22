@@ -13,7 +13,6 @@
         </a>
     </div>
 
-    {{-- Filtros --}}
     <div class="filter-bar">
         <form action="{{ url()->current() }}" method="GET" class="row g-2 align-items-center">
 
@@ -23,20 +22,11 @@
                         <i class="bi bi-search text-muted"></i>
                     </span>
                     <input type="text"
-                           name="search"
-                           class="form-control border-start-0 ps-0"
-                           placeholder="Pesquisar estúdio..."
-                           value="{{ request('search') }}">
+                            name="search"
+                            class="form-control border-start-0 ps-0"
+                            placeholder="Pesquisar estúdio..."
+                            value="{{ request('search') }}">
                 </div>
-            </div>
-
-            <div class="col-md-4">
-                <select name="ordem" class="form-select">
-                    <option value="">Ordenação padrão</option>
-                    <option value="az"         {{ request('ordem') == 'az'         ? 'selected' : '' }}>Nome (A → Z)</option>
-                    <option value="za"         {{ request('ordem') == 'za'         ? 'selected' : '' }}>Nome (Z → A)</option>
-                    <option value="mais_filmes" {{ request('ordem') == 'mais_filmes' ? 'selected' : '' }}>Mais Filmes</option>
-                </select>
             </div>
 
             <div class="col-md-3 d-flex gap-2">
@@ -53,16 +43,15 @@
         </form>
     </div>
 
-    {{-- Grelha de estúdios --}}
     <div class="row g-4">
         @forelse($estudios as $estudio)
             <div class="col-md-6 col-lg-4">
                 <div class="card studio-card h-100">
                     <div class="card-img-container">
                         <img src="{{ $estudio->logo ?? '' }}"
-                             onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';"
-                             class="img-fluid"
-                             alt="Logo {{ $estudio->name }}">
+                                onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';"
+                                class="img-fluid"
+                                alt="Logo {{ $estudio->name }}">
                         <div class="overlay">
                             <span class="overlay-count">{{ $estudio->filmes->count() }}</span>
                             <span class="overlay-label">Filmes no Catálogo</span>
@@ -86,13 +75,6 @@
             </div>
         @endforelse
     </div>
-
-    {{-- Paginação --}}
-    @if(isset($estudios) && method_exists($estudios, 'links') && $estudios->lastPage() > 1)
-        <div class="d-flex justify-content-center mt-5">
-            {{ $estudios->withQueryString()->links() }}
-        </div>
-    @endif
 
 </div>
 @endsection

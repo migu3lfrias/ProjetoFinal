@@ -22,9 +22,7 @@ class UserController extends Controller
             });
         });
 
-        // Filtro pelo user_type (0 ou 1)
-        // Usamos filled() aqui porque o tipo 0 é considerado "falso" no PHP,
-        // então filled() garante que ele apanha mesmo quando filtras por 0.
+
         $query->when($request->filled('user_type'), function ($q) use ($request) {
             return $q->where('user_type', $request->user_type);
         });
@@ -55,7 +53,7 @@ class UserController extends Controller
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Encriptação!
+            'password' => Hash::make($request->password),
             'foto' => $foto
         ]);
 
@@ -99,41 +97,34 @@ class UserController extends Controller
     }
 
     public function perfil()
-{
-    // Retorna a vista do perfil
-    return view('users.perfil');
-}
-
-public function atualizarPerfil(Request $request)
-{
-    // 1. Vai buscar o utilizador que está logado
-    $user = Auth::user();
-
-    // 2. Valida os dados (garante que o email não é de outra pessoa)
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Máximo 2MB
-    ]);
-
-    // 3. Atualiza texto
-    $user->name = $request->name;
-    $user->email = $request->email;
-
-    // 4. Lógica do Upload da Foto
-    if ($request->hasFile('foto')) {
-        // Se ele já tinha uma foto antiga, apagamos para não encher o servidor
-        if ($user->foto) {
-            Storage::disk('public')->delete($user->foto);
-        }
-
-        // Guarda a nova foto na pasta 'storage/app/public/fotos_perfil'
-        $path = $request->file('foto')->store('fotos_perfil', 'public');
-        $user->foto = $path;
+    {
+        return view('users.perfil');
     }
 
-    $user->save();
+    public function atualizarPerfil(Request $request)
+    {
+        $user = Auth::user();
 
-    return back()->with('status', 'Perfil atualizado com sucesso!');
-}
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required' . $user->id,
+            'foto' => 'nullable',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        if ($request->hasFile('foto')) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+
+            $path = $request->file('foto')->store('fotos_perfil', 'public');
+            $user->foto = $path;
+        }
+
+        $user->save();
+
+        return back()->with('status', 'Perfil atualizado com sucesso!');
+    }
 }

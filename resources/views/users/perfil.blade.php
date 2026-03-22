@@ -7,16 +7,13 @@
             <div class="card shadow-sm border-0 p-4">
                 <h4 class="fw-bold mb-4 text-center">O Meu Perfil</h4>
 
-                {{-- O formulário PRECISA do enctype para enviar imagens --}}
                 <form method="POST" action="{{ route('perfil.update') }}" enctype="multipart/form-data">
                     @csrf
 
-                    {{-- Foto Atual (Se existir) --}}
                     <div class="text-center mb-4">
                         @if(Auth::user()->foto)
                             <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Foto de Perfil" class="rounded-circle object-fit-cover shadow-sm" style="width: 120px; height: 120px;">
                         @else
-                            {{-- Foto genérica caso não tenha --}}
                             <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center text-white shadow-sm" style="width: 120px; height: 120px; font-size: 3rem;">
                                 <i class="bi bi-person"></i>
                             </div>
