@@ -12,6 +12,10 @@ class UserController extends Controller
 {
     public function adminList(Request $request)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $query = User::query();
 
         // Pesquisa por Nome OU Email
@@ -34,10 +38,18 @@ class UserController extends Controller
 
 
     public function create() {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         return view('admin.users.form');
     }
 
     public function store(Request $request) {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
@@ -61,11 +73,19 @@ class UserController extends Controller
     }
 
     public function edit($id) {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $user = User::findOrFail($id);
         return view('admin.users.form', compact('user'));
     }
 
     public function update(Request $request, $id) {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $user = User::findOrFail($id);
 
         $request->validate([
@@ -92,6 +112,10 @@ class UserController extends Controller
     }
 
     public function destroy($id) {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         User::findOrFail($id)->delete();
         return redirect()->route('admin.users.list')->with('sucesso', 'Utilizador removido!');
     }

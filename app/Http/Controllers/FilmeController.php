@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Estudio;
 use App\Models\Filme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FilmeController extends Controller
 {
@@ -35,6 +36,10 @@ class FilmeController extends Controller
 
     public function adminList(Request $request)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $query = Filme::with('estudio');
 
         $query->when($request->search, function ($q, $search) {
@@ -52,12 +57,20 @@ class FilmeController extends Controller
 
     public function create()
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $estudios = Estudio::all();
         return view('admin.filmes.form', compact('estudios'));
     }
 
     public function store(Request $request)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $request->validate([
             'titulo' => 'required|string|max:255',
             'estudio_id' => 'required|exists:estudios,id',
@@ -84,6 +97,10 @@ class FilmeController extends Controller
 
     public function edit($id)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $filme = Filme::findOrFail($id);
         $estudios = Estudio::all();
 
@@ -92,6 +109,10 @@ class FilmeController extends Controller
 
     public function update(Request $request, $id)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $request->validate([
             'titulo' => 'required|string|max:255',
             'estudio_id' => 'required|exists:estudios,id',
@@ -121,6 +142,10 @@ class FilmeController extends Controller
 
     public function destroy($id)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $filme = Filme::findOrFail($id);
         $filme->delete();
 

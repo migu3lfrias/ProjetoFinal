@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Estudio;
 use App\Models\Filme;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EstudioController extends Controller
 {
@@ -44,6 +45,11 @@ class EstudioController extends Controller
 
     public function adminList(Request $request)
     {
+
+        if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
+
         $query = Estudio::query();
 
         $query->when($request->search, function ($q, $search) {
@@ -63,11 +69,18 @@ class EstudioController extends Controller
 
     public function create()
     {
+        if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         return view('admin.estudios.form');
     }
 
     public function store(Request $request)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $request->validate([
             'name' => 'required|string|max:255',
             'logo' => 'nullable',
@@ -88,12 +101,20 @@ class EstudioController extends Controller
 
     public function edit($id)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $estudio = Estudio::findOrFail($id);
         return view('admin.estudios.form', compact('estudio'));
     }
 
     public function update(Request $request, $id)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $request->validate([
             'name' => 'required|string|max:255',
             'logo' => 'nullable|image'
@@ -116,6 +137,10 @@ class EstudioController extends Controller
 
     public function destroy($id)
     {
+
+    if (Auth::user()->user_type != 1) {
+        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
+    }
         $estudio = Estudio::findOrFail($id);
         if ($estudio->filmes()->count() > 0) {
             return redirect()->route('admin.estudios.list')
