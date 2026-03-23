@@ -1,5 +1,6 @@
 @extends('layouts.fe_layout')
 
+@section('title', $filme->titulo)
 
 @section('content')
 <div class="container my-5">
