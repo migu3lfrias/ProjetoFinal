@@ -73,8 +73,8 @@
                 @forelse($users as $user)
                 <tr>
                     <td class="ps-4">
-                        <img src="{{ $user->photo
-                                ? asset('storage/' . $user->photo)
+                        <img src="{{ $user->foto
+                                ? asset('storage/' . $user->foto)
                                 : 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=2e3444&color=8b92a5&size=80' }}"
                                 alt="{{ $user->name }}"
                                 class="rounded-circle"

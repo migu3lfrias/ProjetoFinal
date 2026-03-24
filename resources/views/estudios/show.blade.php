@@ -6,10 +6,10 @@
 <div class="container py-4">
 
     <div class="studio-detail-header">
-        <img src="{{ $estudio->logo ?? '' }}"
-                onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';"
-                class="studio-detail-logo"
-                alt="Logo {{ $estudio->name }}">
+        <img src="{{ $estudio->logo }}"
+    onerror="this.onerror=null;this.src='{{ $estudio->logo ? asset('storage/' . $estudio->logo) : '' }}';this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';};"
+    class="studio-detail-logo"
+    alt="Logo {{ $estudio->name }}">
 
         <div class="studio-detail-info">
             <h1>{{ $estudio->name }}</h1>
@@ -32,9 +32,9 @@
                 <div class="card film-card h-100">
                     <div class="film-poster-wrap">
                         <img src="{{ $filme->capa }}"
-                                onerror="this.onerror=null;this.src='https://placehold.co/400x600/292b2c/FFFFFF?text={{ urlencode($filme->titulo) }}';"
-                                class="card-img-top"
-                                alt="Capa de {{ $filme->titulo }}">
+                            onerror="this.onerror=null;this.src='{{ $filme->capa ? asset('storage/' . $filme->capa) : '' }}';this.onerror=function(){this.src='https://placehold.co/400x600/292b2c/FFFFFF?text={{ urlencode($filme->titulo) }}';};"
+                            class="card-img-top"
+                            alt="Capa de {{ $filme->titulo }}">
                         <div class="card-img-overlay">
                             <div class="overlay-content">
                                 <a href="{{ route('filmes.show', $filme->id) }}" class="btn btn-light btn-sm px-3">

@@ -6,6 +6,7 @@ use App\Models\Estudio;
 use App\Models\Filme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class EstudioController extends Controller
 {
@@ -17,24 +18,18 @@ class EstudioController extends Controller
     }
 
     public function list(Request $request)
-{
-    $query = Estudio::query();
+    {
+        $query = Estudio::query();
 
-    $query->when($request->search, function ($q, $search) {
-        return $q->where('nome', 'like', "%{$search}%");
+        $query->when($request->search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%");
 
-    });
+        });
 
-    $query->when($request->ordem, function ($q, $ordem) {
-        if ($ordem === 'az') return $q->orderBy('nome', 'asc');
-        if ($ordem === 'za') return $q->orderBy('nome', 'desc');
-        return $q;
-    });
+        $estudios = $query->get();
 
-    $estudios = $query->get();
-
-    return view('estudios.list', compact('estudios'));
-}
+        return view('estudios.list', compact('estudios'));
+    }
 
     public function show($id)
     {
@@ -46,20 +41,14 @@ class EstudioController extends Controller
     public function adminList(Request $request)
     {
 
-        if (Auth::user()->user_type != 1) {
+        if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
 
         $query = Estudio::query();
 
-        $query->when($request->search, function ($q, $search) {
-            return $q->where('nome', 'like', "%{$search}%");
-        });
-
-        $query->when($request->ordem, function ($q, $ordem) {
-            if ($ordem === 'az') return $q->orderBy('nome', 'asc');
-            if ($ordem === 'za') return $q->orderBy('nome', 'desc');
-            return $q;
+        $query->when($request->search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%");
         });
 
         $estudios = $query->get();
@@ -69,7 +58,7 @@ class EstudioController extends Controller
 
     public function create()
     {
-        if (Auth::user()->user_type != 1) {
+        if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         return view('admin.estudios.form');
@@ -78,7 +67,7 @@ class EstudioController extends Controller
     public function store(Request $request)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $request->validate([
@@ -102,7 +91,7 @@ class EstudioController extends Controller
     public function edit($id)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $estudio = Estudio::findOrFail($id);
@@ -111,25 +100,24 @@ class EstudioController extends Controller
 
     public function update(Request $request, $id)
     {
-
-    if (Auth::user()->user_type != 1) {
-        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
-    }
         $request->validate([
             'name' => 'required|string|max:255',
-            'logo' => 'nullable|image'
+            'logo' => 'nullable'
         ]);
 
         $estudio = Estudio::findOrFail($id);
-        $logo = $estudio->logo;
 
-        if($request->hasFile('logo')){
-            $logo = $request->file('logo')->store('estudios', 'public');
+        if ($request->hasFile('logo')) {
+            // Apaga logo anterior se existir
+            if ($estudio->logo) {
+                Storage::disk('public')->delete($estudio->logo);
+            }
+            $estudio->logo = $request->file('logo')->store('estudios', 'public');
         }
 
         $estudio->update([
             'name' => $request->name,
-            'logo' => $logo
+            'logo' => $estudio->logo
         ]);
 
         return redirect()->route('admin.estudios.list')->with('sucesso', 'Estúdio atualizado!');
@@ -138,9 +126,11 @@ class EstudioController extends Controller
     public function destroy($id)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
+
+        //Não permite eleminar estudios que tem filmes
         $estudio = Estudio::findOrFail($id);
         if ($estudio->filmes()->count() > 0) {
             return redirect()->route('admin.estudios.list')

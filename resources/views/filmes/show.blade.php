@@ -13,8 +13,8 @@
 
         <div class="col-md-4 text-center mb-4 mb-md-0">
             <img src="{{ $filme->capa }}"
-                onerror="this.onerror=null; this.src='https://placehold.co/400x600/292b2c/FFFFFF?text={{ urlencode($filme->titulo) }}';"
-                class="img-fluid rounded-4 shadow"
+                onerror="this.onerror=null;this.src='{{ $filme->capa ? asset('storage/' . $filme->capa) : '' }}';this.onerror=function(){this.src='https://placehold.co/400x600/1a1e2e/FFFFFF?text={{ urlencode($filme->titulo) }}';};"
+                class="card-img-top"
                 alt="Capa de {{ $filme->titulo }}"
                 style="max-height: 500px; object-fit: cover;">
         </div>

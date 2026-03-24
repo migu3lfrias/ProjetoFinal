@@ -48,8 +48,8 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card studio-card h-100">
                     <div class="card-img-container">
-                        <img src="{{ $estudio->logo ?? '' }}"
-                                onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';"
+                        <img src="{{ $estudio->logo }}"
+                                onerror="this.onerror=null;this.src='{{ $estudio->logo ? asset('storage/' . $estudio->logo) : '' }}';this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';};"
                                 class="img-fluid"
                                 alt="Logo {{ $estudio->name }}">
                         <div class="overlay">

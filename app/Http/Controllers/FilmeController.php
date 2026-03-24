@@ -6,6 +6,7 @@ use App\Models\Estudio;
 use App\Models\Filme;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FilmeController extends Controller
 {
@@ -14,12 +15,12 @@ class FilmeController extends Controller
     {
         $query = Filme::query();
 
-    $query->when($request->search, function ($q, $search) {
-        return $q->where('titulo', 'like', "%{$search}%");
+    $query->when($request->search, function ($query, $search) {
+        return $query->where('titulo', 'like', "%{$search}%");
     });
 
-    $query->when($request->genero, function ($q, $genero) {
-        return $q->where('genero', $genero);
+    $query->when($request->genero, function ($query, $genero) {
+        return $query->where('genero', $genero);
     });
     $filmes = $query->get();
 
@@ -37,17 +38,17 @@ class FilmeController extends Controller
     public function adminList(Request $request)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $query = Filme::with('estudio');
 
-        $query->when($request->search, function ($q, $search) {
-            return $q->where('titulo', 'like', "%{$search}%");
+        $query->when($request->search, function ($query, $search) {
+            return $query->where('titulo', 'like', "%{$search}%");
         });
 
-        $query->when($request->genero, function ($q, $genero) {
-            return $q->where('genero', $genero);
+        $query->when($request->genero, function ($query, $genero) {
+            return $query->where('genero', $genero);
         });
 
         $filmes = $query->get();
@@ -58,7 +59,7 @@ class FilmeController extends Controller
     public function create()
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $estudios = Estudio::all();
@@ -68,7 +69,7 @@ class FilmeController extends Controller
     public function store(Request $request)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $request->validate([
@@ -98,7 +99,7 @@ class FilmeController extends Controller
     public function edit($id)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $filme = Filme::findOrFail($id);
@@ -110,23 +111,24 @@ class FilmeController extends Controller
     public function update(Request $request, $id)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $request->validate([
             'titulo' => 'required|string|max:255',
             'estudio_id' => 'required|exists:estudios,id',
             'genero' => 'required|string|max:100',
-            'data_lancamento' => 'required|date',
-            'capa' => 'nullable|image'
+            'data_lancamento' => 'required',
+            'capa' => 'nullable'
         ]);
 
         $filme = Filme::findOrFail($id);
 
-        $capa = $filme->capa;
-
-        if($request->hasFile('capa')){
-            $capa = $request->file('capa')->store('filmes', 'public');
+        if ($request->hasFile('capa')) {
+            if ($filme->capa) {
+                Storage::disk('public')->delete($filme->capa);
+            }
+            $filme->capa = $request->file('capa')->store('filme', 'public');
         }
 
         $filme->update([
@@ -134,7 +136,7 @@ class FilmeController extends Controller
             'estudio_id' => $request->estudio_id,
             'genero' => $request->genero,
             'data_lancamento' => $request->data_lancamento,
-            'capa' => $capa
+            'capa' => $filme->capa
         ]);
 
         return redirect()->route('admin.filmes.list')->with('sucesso', 'Filme atualizado com sucesso!');
@@ -143,7 +145,7 @@ class FilmeController extends Controller
     public function destroy($id)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $filme = Filme::findOrFail($id);

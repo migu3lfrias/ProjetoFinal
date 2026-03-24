@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
+
     public function dashboard()
     {
-        if (Auth::user()->user_type != 1) {
+        //Futuro passar isso para uma função ou mudar para o jeito usado em aula
+        if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
 

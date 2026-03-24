@@ -58,9 +58,9 @@
                 <div class="card film-card h-100">
                     <div class="film-poster-wrap">
                         <img src="{{ $filme->capa }}"
-                                onerror="this.onerror=null;this.src='https://placehold.co/400x600/292b2c/FFFFFF?text={{ urlencode($filme->titulo) }}';"
-                                class="card-img-top"
-                                alt="Capa de {{ $filme->titulo }}">
+                            onerror="this.onerror=null;this.src='{{ $filme->capa ? asset('storage/' . $filme->capa) : '' }}';this.onerror=function(){this.src='https://placehold.co/400x600/1a1e2e/FFFFFF?text={{ urlencode($filme->titulo) }}';};"
+                            class="card-img-top"
+                            alt="Capa de {{ $filme->titulo }}">
                         <div class="card-img-overlay">
                             <div class="overlay-content">
                                 <a href="{{ route('filmes.show', $filme->id) }}" class="btn btn-light btn-sm px-3">

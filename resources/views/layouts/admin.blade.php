@@ -71,8 +71,8 @@
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false">
-                                @if(Auth::check() && Auth::user()->photo)
-                                    <img src="{{ asset('storage/' . Auth::user()->photo) }}"
+                                @if(Auth::check() && Auth::user()->foto)
+                                    <img src="{{ asset('storage/' . Auth::user()->foto) }}"
                                             alt="Foto de {{ Auth::user()->name }}"
                                             class="admin-avatar me-1">
                                 @else

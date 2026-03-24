@@ -25,7 +25,7 @@
 
         <div class="mb-4">
             <label class="form-label">Foto de Perfil</label>
-            <input type="file" name="photo" class="form-control" accept="image/*">
+            <input type="file" name="foto" class="form-control" accept="image/*">
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar Utilizador</button>

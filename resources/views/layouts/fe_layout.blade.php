@@ -66,8 +66,8 @@
                                    role="button"
                                    data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    @if(Auth::user()->photo)
-                                        <img src="{{ asset('storage/' . Auth::user()->photo) }}"
+                                    @if(Auth::user()->foto)
+                                        <img src="{{ asset('storage/' . Auth::user()->foto) }}"
                                              alt="Foto de {{ Auth::user()->name }}"
                                              class="rounded-circle object-fit-cover"
                                              style="width:28px;height:28px;border:2px solid rgba(0,168,150,0.5);">
@@ -185,7 +185,7 @@
 
         <div class="footer-bottom">
             <div class="container">
-                &copy; {{ date('Y') }} CineCRM. Todos os direitos reservados.
+                &copy; {{ date('Y') }} CineCRM. Realizado por Miguel Frias.
             </div>
         </div>
     </footer>

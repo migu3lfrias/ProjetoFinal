@@ -42,10 +42,10 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="card studio-card h-100">
                         <div class="card-img-container">
-                            <img src="{{ $estudio->logo ?? '' }}"
-                                    onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';"
-                                    class="img-fluid"
-                                    alt="Logo {{ $estudio->name }}">
+                            <img src="{{ $estudio->logo }}"
+                                onerror="this.onerror=null;this.src='{{ $estudio->logo ? asset('storage/' . $estudio->logo) : '' }}';this.onerror=function(){this.src='https://ui-avatars.com/api/?name={{ urlencode($estudio->name) }}&background=e9ecef&color=343a40&size=400&font-size=0.3';};"
+                                class="img-fluid"
+                                alt="Logo {{ $estudio->name }}">
                             <div class="overlay">
                                 <span class="overlay-count">{{ $estudio->filmes->count() }}</span>
                                 <span class="overlay-label">Filmes no Catálogo</span>
@@ -90,10 +90,10 @@
                 <div class="col-md-6 col-lg-4">
                     <div class="card film-card h-100">
                         <div class="film-poster-wrap">
-                            <img src="{{ $filme->capa ?? '' }}"
-                                    onerror="this.onerror=null;this.src='https://placehold.co/400x600/1a1e2e/FFFFFF?text={{ urlencode($filme->titulo) }}';"
-                                    class="card-img-top"
-                                    alt="Capa de {{ $filme->titulo }}">
+                            <img src="{{ $filme->capa }}"
+                                onerror="this.onerror=null;this.src='{{ $filme->capa ? asset('storage/' . $filme->capa) : '' }}';this.onerror=function(){this.src='https://placehold.co/400x600/1a1e2e/FFFFFF?text={{ urlencode($filme->titulo) }}';};"
+                                class="card-img-top"
+                                alt="Capa de {{ $filme->titulo }}">
                             <div class="card-img-overlay">
                                 <div class="overlay-content">
                                     <a href="{{ route('filmes.show', $filme->id) }}" class="btn btn-light btn-sm px-4">

@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     {
         // Chama os teus novos seeders pela ordem correta
         $this->call([
+            UserSeeder::class,
             EstudioSeeder::class,
             FilmeSeeder::class,
         ]);

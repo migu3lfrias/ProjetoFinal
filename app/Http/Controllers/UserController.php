@@ -13,7 +13,7 @@ class UserController extends Controller
     public function adminList(Request $request)
     {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $query = User::query();
@@ -39,7 +39,7 @@ class UserController extends Controller
 
     public function create() {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         return view('admin.users.form');
@@ -47,7 +47,7 @@ class UserController extends Controller
 
     public function store(Request $request) {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $request->validate([
@@ -74,38 +74,41 @@ class UserController extends Controller
 
     public function edit($id) {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         $user = User::findOrFail($id);
         return view('admin.users.form', compact('user'));
     }
 
-    public function update(Request $request, $id) {
-
-    if (Auth::user()->user_type != 1) {
-        return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
-    }
+    //Alterar a forma de guardar foto
+    public function update(Request $request, $id)
+    {
         $user = User::findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'nullable|min:6',
             'foto' => 'nullable|image'
         ]);
 
-        $foto = $user->foto;
-        if($request->hasFile('foto')){
-            $foto = $request->file('foto')->store('users', 'public');
-        }
-
         $user->name = $request->name;
         $user->email = $request->email;
-        if($request->password) {
+
+        if ($request->password) {
             $user->password = Hash::make($request->password);
         }
-        $user->foto = $foto;
+
+        // Só atualiza foto se enviou uma nova
+
+        if ($request->hasFile('foto')) {
+            if ($user->foto) {
+                Storage::disk('public')->delete($user->foto);
+            }
+            $user->foto = $request->file('foto')->store('users', 'public');
+        }
+
         $user->save();
 
         return redirect()->route('admin.users.list')->with('sucesso', 'Utilizador atualizado!');
@@ -113,7 +116,7 @@ class UserController extends Controller
 
     public function destroy($id) {
 
-    if (Auth::user()->user_type != 1) {
+    if (!Auth::user()->isAdmin()) {
         return redirect('/')->with('error', 'Acesso negado. Apenas administradores.');
     }
         User::findOrFail($id)->delete();
@@ -138,13 +141,12 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
 
-        if ($request->hasFile('foto')) {
-            if ($user->foto) {
-                Storage::disk('public')->delete($user->foto);
-            }
-
-            $path = $request->file('foto')->store('fotos_perfil', 'public');
-            $user->foto = $path;
+        //Se é adionado foto apaga a anterior
+            if ($request->hasFile('foto')) {
+                if ($user->foto) {
+                    Storage::disk('public')->delete($user->foto);
+                }
+            $user->foto = $request->file('foto')->store('fotos_perfil', 'public');
         }
 
         $user->save();
